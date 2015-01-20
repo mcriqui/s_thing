@@ -1,30 +1,35 @@
-"""Working alarm clock python script.  To test this on the first run, I suggest setting alarm_HH and alarm_MM to whatever your computer clock is displaying at time of run - that way, the alarm will automatically go off. For the second run, set the alarm to go off one minute from computer display. """
-
-"Note: right now, the loop is getting hung on the second run (when setting alarm in advance) -- my goal for week of 1/19 is to correc this resource issue."
-
 import time
 import os
+import datetime
+from datetime import datetime, timedelta
 #from non import nonBlockingRawInput
 
 name = raw_input("Enter your name.")
 
 print("Hello, " + name)
 
-alarm_HH = raw_input("Enter the hour you want to wake up at") #military time. enter number 0-23
-alarm_MM = raw_input("Enter the minute you want to wake up at") #military time. enter number 0-60. 
-#will combine alarm_HH with alarm_MM. For example: 21:05
+alarm_HH = raw_input("Enter the hour you want to wake up at")
+alarm_MM = raw_input("Enter the minute you want to wake up at")
 
-print("You want to wake up at " + alarm_HH + ":" + alarm_MM)
+alarm_time = "{0}:{1}".format(alarm_HH, alarm_MM)
+
+time_obj = datetime.strptime(alarm_time, '%I:%M')
+
+change_in_time = timedelta(minutes=20)
+
+new_time = time_obj - change_in_time
+
+
+print "You want to wake up at {0}".format(new_time.time())
 
 while True:
     now = time.localtime()
-    print now
-    if now.tm_hour == int(alarm_HH) and now.tm_min == int(alarm_MM):
+    # print now
+    if now.tm_hour == int(new_time.hour) and now.tm_min == int(new_time.minute):
         print("ALARM NOW!")
-        os.popen("samplesong.mp3") #place an mp3 file into your python directory. Rename the file samplesong in order for this to open as your alarm
+        os.popen("samplesong.mp3")
         break
 
-    else:
-        print("no alarm")
+    # else:
+    #     print("no alarm")
     timeout = 60 - now.tm_sec
-    
